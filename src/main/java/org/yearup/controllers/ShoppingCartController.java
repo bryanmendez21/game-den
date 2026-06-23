@@ -5,10 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import org.yearup.models.CartItem;
-import org.yearup.models.Product;
-import org.yearup.models.ShoppingCart;
-import org.yearup.models.User;
+import org.yearup.models.*;
 import org.yearup.service.ShoppingCartService;
 import org.yearup.service.UserService;
 
@@ -19,18 +16,23 @@ import java.security.Principal;
 @RequestMapping("cart")
 @CrossOrigin
 // only logged-in users should have access to these actions
-@PreAuthorize("isAuthenticated()")
 public class ShoppingCartController
 {
     // a shopping cart controller depends on the service layer
     private ShoppingCartService shoppingCartService;
     private UserService userService;
 
+    public ShoppingCartController(ShoppingCartService shoppingCartService, UserService userService) {
+        this.shoppingCartService = shoppingCartService;
+        this.userService = userService;
+    }
 
     @GetMapping
+    @PreAuthorize("hasRole('ROLE_USER')")
     // each method in this controller requires a Principal object as a parameter
     public ShoppingCart getCart(Principal principal)
     {
+        System.out.println("Hi");
         // get the currently logged-in username
         String userName = principal.getName();
         // find database user by username
@@ -45,7 +47,7 @@ public class ShoppingCartController
     // https://localhost:8080/cart/products/15  (15 is the productId to be added)
     // return the updated cart with status 201 Created
     @PostMapping("products/{productId}")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ShoppingCart> addProductToCart(@PathVariable int productId, Principal principal)
     {
         String userName = principal.getName();
@@ -61,21 +63,24 @@ public class ShoppingCartController
     // add a PUT method to update an existing product in the cart - the url should be
     // https://localhost:8080/cart/products/15  (15 is the productId to be updated)
     // the BODY should be a ShoppingCartItem - quantity is the only value that will be updated; return the cart (200 OK)
-//    @PutMapping("{id}")
-//    @PreAuthorize("isAuthenticated()")
-//    public Product updateCart(@PathVariable int id, @RequestBody Product product)
-//    {
-//        if (productService.getById(id) == null)
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-//
-//        return productService.update(id, product);
-//    }
+    @PutMapping("products/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ShoppingCart>  updateCart(@PathVariable int id, @RequestBody ShoppingCartItem cartItem, Principal principal)
+    {
+        String userName = principal.getName();
+        User user = userService.getByUserName(userName);
+        int userId = user.getId();
+
+        shoppingCartService.update(userId,id,cartItem);
+
+        return ResponseEntity.status(200).body(shoppingCartService.getByUserId(userId));
+    }
 
 
     // add a DELETE method to clear all products from the current users cart
     // https://localhost:8080/cart  - return the (now empty) cart so the front end can refresh it (200 OK)
     @DeleteMapping()
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ShoppingCart> deleteCart(Principal principal)
     {
         String userName = principal.getName();

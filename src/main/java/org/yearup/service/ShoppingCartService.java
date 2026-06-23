@@ -1,9 +1,8 @@
 package org.yearup.service;
 
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-import org.yearup.models.CartItem;
-import org.yearup.models.ShoppingCart;
-import org.yearup.models.ShoppingCartItem;
+import org.yearup.models.*;
 import org.yearup.repository.ShoppingCartRepository;
 
 import java.util.List;
@@ -57,6 +56,21 @@ public class ShoppingCartService
         return shoppingCartRepository.save(cartItems);
     }
 
+    public CartItem update(int userId, int productId, ShoppingCartItem item)
+    {
+        CartItem cartItems = shoppingCartRepository.findByUserIdAndProductId(userId, productId);
+        if(cartItems == null) {
+            throw new RuntimeException("product not found!");
+        }
+
+        cartItems.setQuantity(item.getQuantity());
+
+        return shoppingCartRepository.save(cartItems);
+
+    }
+
+
+    @Transactional
     public void delete(int userId)
     {
         shoppingCartRepository.deleteByUserId(userId);
