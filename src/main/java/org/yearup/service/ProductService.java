@@ -16,11 +16,6 @@ public class ProductService
         this.productRepository = productRepository;
     }
 
-    public List<Product> getAllProduct()
-    {
-        return productRepository.findAll();
-    }
-
     public List<Product> search(Integer categoryId, Double minPrice, Double maxPrice, String subCategory)
     {
         List<Product> products = categoryId != null
@@ -60,6 +55,7 @@ public class ProductService
         existing.setSubCategory(product.getSubCategory());
         existing.setFeatured(product.isFeatured());
         existing.setImageUrl(product.getImageUrl());
+        existing.setStock(product.getStock());
         return productRepository.save(existing);
     }
 
