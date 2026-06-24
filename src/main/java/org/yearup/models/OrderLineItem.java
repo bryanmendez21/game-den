@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "order_line_item")
+@Table(name = "order_line_items")
 public class OrderLineItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,20 +19,20 @@ public class OrderLineItem {
     private int productId;
 
     @Column(name = "sales_price")
-    private BigDecimal salesPrice;
+    private double salesPrice;
 
     @Column(name = "quantity")
     private int quantity;
 
     @Column(name = "discount")
-    private BigDecimal discount;
+    private double discount;
 
 
     public OrderLineItem()
     {
     }
 
-    public OrderLineItem(int orderLineItemId, int orderId, int productId, BigDecimal salesPrice, int quantity, BigDecimal discount) {
+    public OrderLineItem(int orderLineItemId, int orderId, int productId, double salesPrice, int quantity, double discount) {
         this.orderLineItemId = orderLineItemId;
         this.orderId = orderId;
         this.productId = productId;
@@ -65,11 +65,11 @@ public class OrderLineItem {
         this.productId = productId;
     }
 
-    public BigDecimal getSalesPrice() {
+    public double getSalesPrice() {
         return salesPrice;
     }
 
-    public void setSalesPrice(BigDecimal salesPrice) {
+    public void setSalesPrice(double salesPrice) {
         this.salesPrice = salesPrice;
     }
 
@@ -81,11 +81,11 @@ public class OrderLineItem {
         this.quantity = quantity;
     }
 
-    public BigDecimal getDiscount() {
+    public double getDiscount() {
         return discount;
     }
 
-    public void setDiscount(BigDecimal discount) {
+    public void setDiscount(double discount) {
         this.discount = discount;
     }
 }

@@ -2,6 +2,8 @@ package org.yearup.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.math.BigDecimal;
+
 public class ShoppingCartItem
 {
     private Product product = null;
