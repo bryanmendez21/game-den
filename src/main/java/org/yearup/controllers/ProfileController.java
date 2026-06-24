@@ -29,7 +29,7 @@ public class ProfileController {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public Profile getProfile (Principal principal){
         // get the currently logged-in username
         String userName = principal.getName();
@@ -41,7 +41,7 @@ public class ProfileController {
     }
 
     @PutMapping()
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public ResponseEntity<Profile> updateProfile(Principal principal, @RequestBody Profile profile)
     {
         String userName = principal.getName();

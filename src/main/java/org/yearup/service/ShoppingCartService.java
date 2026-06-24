@@ -69,7 +69,6 @@ public class ShoppingCartService
 
     }
 
-
     @Transactional
     public void delete(int userId)
     {
