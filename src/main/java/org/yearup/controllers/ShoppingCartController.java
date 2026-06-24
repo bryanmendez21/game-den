@@ -32,7 +32,6 @@ public class ShoppingCartController
     // each method in this controller requires a Principal object as a parameter
     public ShoppingCart getCart(Principal principal)
     {
-        System.out.println("Hi");
         // get the currently logged-in username
         String userName = principal.getName();
         // find database user by username
@@ -64,7 +63,7 @@ public class ShoppingCartController
     // https://localhost:8080/cart/products/15  (15 is the productId to be updated)
     // the BODY should be a ShoppingCartItem - quantity is the only value that will be updated; return the cart (200 OK)
     @PutMapping("products/{id}")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ShoppingCart>  updateCart(@PathVariable int id, @RequestBody ShoppingCartItem cartItem, Principal principal)
     {
         String userName = principal.getName();
